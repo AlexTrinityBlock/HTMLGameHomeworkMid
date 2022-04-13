@@ -1,0 +1,67 @@
+{
+	"name": "qBlock",
+	"plugin-id": "Sprite",
+	"sid": 9553444396754136,
+	"isGlobal": false,
+	"instanceVariables": [],
+	"behaviorTypes": [],
+	"effectTypes": [],
+	"animations": {
+		"items": [
+			{
+				"frames": [
+					{
+						"width": 70,
+						"height": 70,
+						"originX": 0,
+						"originY": 0,
+						"originalSource": "",
+						"exportFormat": "png",
+						"exportQuality": 0.8,
+						"imageSpriteId": 10,
+						"duration": 1
+					},
+					{
+						"width": 70,
+						"height": 70,
+						"originX": 0,
+						"originY": 0,
+						"originalSource": "",
+						"exportFormat": "png",
+						"exportQuality": 0.8,
+						"imageSpriteId": 11,
+						"collisionPoly": {
+							"points": [
+								0.0285714,
+								0.0285714,
+								0.5,
+								0,
+								0.971429,
+								0.0285714,
+								1,
+								0.5,
+								0.971429,
+								0.971429,
+								0.5,
+								1,
+								0.0285714,
+								0.971429,
+								0,
+								0.5
+							]
+						},
+						"duration": 1
+					}
+				],
+				"sid": 8915003194113943,
+				"name": "Default",
+				"isLooping": false,
+				"isPingPong": false,
+				"repeatCount": 1,
+				"repeatTo": 0,
+				"speed": 0
+			}
+		],
+		"subfolders": []
+	}
+}

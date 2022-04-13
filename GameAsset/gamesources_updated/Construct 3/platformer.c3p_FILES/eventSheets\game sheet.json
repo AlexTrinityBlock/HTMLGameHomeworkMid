@@ -1,0 +1,177 @@
+{
+	"name": "Game sheet",
+	"events": [
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-collision-with-another-object",
+					"objectClass": "alien",
+					"sid": 7795969768615635,
+					"parameters": {
+						"object": "coin"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "destroy",
+					"objectClass": "coin",
+					"sid": 8537528696822941
+				}
+			],
+			"sid": 5099347464965708
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "keyboard",
+					"sid": 3170221371050651,
+					"parameters": {
+						"key": 37
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-mirrored",
+					"objectClass": "alien",
+					"sid": 3332280367031891,
+					"parameters": {
+						"state": "mirrored"
+					}
+				}
+			],
+			"sid": 4466761369989844
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-key-pressed",
+					"objectClass": "keyboard",
+					"sid": 6095139001394158,
+					"parameters": {
+						"key": 39
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-mirrored",
+					"objectClass": "alien",
+					"sid": 839464567772181,
+					"parameters": {
+						"state": "not-mirrored"
+					}
+				}
+			],
+			"sid": 9266723504048396
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-moving",
+					"objectClass": "alien",
+					"sid": 1927432466516327,
+					"behaviorType": "Platform"
+				},
+				{
+					"id": "is-on-floor",
+					"objectClass": "alien",
+					"sid": 4075891294703851,
+					"behaviorType": "Platform"
+				}
+			],
+			"actions": [
+				{
+					"id": "set-animation",
+					"objectClass": "alien",
+					"sid": 1670384391179293,
+					"parameters": {
+						"animation": "\"Walk\"",
+						"from": "beginning"
+					}
+				}
+			],
+			"sid": 6474200744743489
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "else",
+					"objectClass": "System",
+					"sid": 1135703470401466
+				}
+			],
+			"actions": [
+				{
+					"id": "set-animation",
+					"objectClass": "alien",
+					"sid": 1396949919668998,
+					"parameters": {
+						"animation": "\"Default\"",
+						"from": "beginning"
+					}
+				}
+			],
+			"sid": 6484159408500225
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "is-jumping",
+					"objectClass": "alien",
+					"sid": 3405006382638871,
+					"behaviorType": "Platform"
+				},
+				{
+					"id": "is-animation-playing",
+					"objectClass": "alien",
+					"sid": 7844554667223901,
+					"parameters": {
+						"animation": "\"Default\""
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-animation-frame",
+					"objectClass": "alien",
+					"sid": 165536466533316,
+					"parameters": {
+						"frame-number": "1"
+					}
+				}
+			],
+			"sid": 8433746575772975
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-collision-with-another-object",
+					"objectClass": "alien",
+					"sid": 3888003009375393,
+					"parameters": {
+						"object": "barnacle"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "restart-layout",
+					"objectClass": "System",
+					"sid": 3606913014436115
+				}
+			],
+			"sid": 8582336406522018
+		}
+	],
+	"sid": 351784577372947
+}

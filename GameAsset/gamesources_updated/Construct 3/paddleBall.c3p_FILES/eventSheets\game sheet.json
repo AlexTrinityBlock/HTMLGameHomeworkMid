@@ -1,0 +1,115 @@
+{
+	"name": "Game sheet",
+	"events": [
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "every-tick",
+					"objectClass": "System",
+					"sid": 5565983178566185
+				}
+			],
+			"actions": [
+				{
+					"id": "set-x",
+					"objectClass": "bat",
+					"sid": 8140160568742511,
+					"parameters": {
+						"x": "Mouse.X"
+					}
+				}
+			],
+			"sid": 7593843529110819
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-collision-with-another-object",
+					"objectClass": "ball",
+					"sid": 3062664281525735,
+					"parameters": {
+						"object": "blocks"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "destroy",
+					"objectClass": "blocks",
+					"sid": 3050945372025091
+				}
+			],
+			"sid": 6498596772245862
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-click",
+					"objectClass": "mouse",
+					"sid": 9676801937611994,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked"
+					}
+				},
+				{
+					"id": "compare-speed",
+					"objectClass": "ball",
+					"sid": 9299254120958454,
+					"behaviorType": "Bullet",
+					"parameters": {
+						"comparison": 0,
+						"speed": "0"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-speed",
+					"objectClass": "ball",
+					"sid": 1158314397138972,
+					"behaviorType": "Bullet",
+					"parameters": {
+						"speed": "500"
+					}
+				},
+				{
+					"id": "set-angle-of-motion",
+					"objectClass": "ball",
+					"sid": 2845181086970415,
+					"behaviorType": "Bullet",
+					"parameters": {
+						"angle": "90"
+					}
+				}
+			],
+			"sid": 6240398254254679
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "compare-y",
+					"objectClass": "ball",
+					"sid": 8803162074574065,
+					"parameters": {
+						"comparison": 4,
+						"y-co-ordinate": "WindowHeight"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "restart-layout",
+					"objectClass": "System",
+					"sid": 1319536507050312
+				}
+			],
+			"sid": 1370095846653343
+		}
+	],
+	"sid": 927873305641354
+}

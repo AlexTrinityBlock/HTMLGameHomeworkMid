@@ -1,0 +1,62 @@
+{
+	"name": "ball",
+	"plugin-id": "Sprite",
+	"sid": 3547942282813927,
+	"isGlobal": false,
+	"instanceVariables": [],
+	"behaviorTypes": [
+		{
+			"behaviorId": "Bullet",
+			"name": "Bullet",
+			"sid": 2747087496919007
+		}
+	],
+	"effectTypes": [],
+	"animations": {
+		"items": [
+			{
+				"frames": [
+					{
+						"width": 22,
+						"height": 22,
+						"originX": 0.5,
+						"originY": 0.5,
+						"originalSource": "",
+						"exportFormat": "png",
+						"exportQuality": 0.8,
+						"imageSpriteId": 2,
+						"collisionPoly": {
+							"points": [
+								0.136364,
+								0.136364,
+								0.5,
+								0,
+								0.863636,
+								0.136364,
+								1,
+								0.5,
+								0.863636,
+								0.863636,
+								0.5,
+								1,
+								0.136364,
+								0.863636,
+								0,
+								0.5
+							]
+						},
+						"duration": 1
+					}
+				],
+				"sid": 2789325698345439,
+				"name": "Default",
+				"isLooping": false,
+				"isPingPong": false,
+				"repeatCount": 1,
+				"repeatTo": 0,
+				"speed": 5
+			}
+		],
+		"subfolders": []
+	}
+}

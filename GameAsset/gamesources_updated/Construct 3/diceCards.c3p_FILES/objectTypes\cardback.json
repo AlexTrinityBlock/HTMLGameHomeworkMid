@@ -1,0 +1,52 @@
+{
+	"name": "cardBack",
+	"plugin-id": "Sprite",
+	"sid": 1876367115343165,
+	"isGlobal": false,
+	"instanceVariables": [],
+	"behaviorTypes": [],
+	"effectTypes": [],
+	"animations": {
+		"items": [
+			{
+				"frames": [
+					{
+						"width": 140,
+						"height": 190,
+						"originX": 0.5,
+						"originY": 0.5,
+						"originalSource": "",
+						"exportFormat": "png",
+						"exportQuality": 0.8,
+						"imageSpriteId": 65,
+						"collisionPoly": {
+							"points": [
+								0.0142857,
+								0.0105263,
+								0.985714,
+								0.0105263,
+								1,
+								0.5,
+								0.985714,
+								0.989474,
+								0.0142857,
+								0.989474,
+								0,
+								0.5
+							]
+						},
+						"duration": 1
+					}
+				],
+				"sid": 167448543965691,
+				"name": "Default",
+				"isLooping": false,
+				"isPingPong": false,
+				"repeatCount": 1,
+				"repeatTo": 0,
+				"speed": 5
+			}
+		],
+		"subfolders": []
+	}
+}

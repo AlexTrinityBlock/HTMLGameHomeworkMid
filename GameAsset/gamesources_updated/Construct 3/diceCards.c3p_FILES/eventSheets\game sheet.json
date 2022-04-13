@@ -1,0 +1,103 @@
+{
+	"name": "Game sheet",
+	"events": [
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "mouse",
+					"sid": 2560675753971701,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "cardBack"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "create-object",
+					"objectClass": "System",
+					"sid": 8309925422851791,
+					"parameters": {
+						"object-to-create": "card",
+						"layer": "0",
+						"x": "cardBack.X + 200",
+						"y": "cardBack.Y"
+					}
+				},
+				{
+					"id": "set-angle",
+					"objectClass": "card",
+					"sid": 5432706672588859,
+					"parameters": {
+						"angle": "random(15) - random(15)"
+					}
+				},
+				{
+					"id": "set-animation-frame",
+					"objectClass": "card",
+					"sid": 9443801402694396,
+					"parameters": {
+						"frame-number": "random(51)"
+					}
+				}
+			],
+			"sid": 6623432964759176
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "mouse",
+					"sid": 177560491994634,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "dieRed"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-animation-frame",
+					"objectClass": "dieRed",
+					"sid": 182864513012499,
+					"parameters": {
+						"frame-number": "random(6)"
+					}
+				}
+			],
+			"sid": 1522316657243132
+		},
+		{
+			"eventType": "block",
+			"conditions": [
+				{
+					"id": "on-object-clicked",
+					"objectClass": "mouse",
+					"sid": 2067131004548372,
+					"parameters": {
+						"mouse-button": "left",
+						"click-type": "clicked",
+						"object-clicked": "dieWhite"
+					}
+				}
+			],
+			"actions": [
+				{
+					"id": "set-animation-frame",
+					"objectClass": "dieWhite",
+					"sid": 8981665606453833,
+					"parameters": {
+						"frame-number": "random(6)"
+					}
+				}
+			],
+			"sid": 4725549474803491
+		}
+	],
+	"sid": 226639362219920
+}

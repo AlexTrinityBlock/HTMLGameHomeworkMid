@@ -1,0 +1,47 @@
+{
+	"name": "barnacle",
+	"plugin-id": "Sprite",
+	"sid": 1051541749120318,
+	"isGlobal": false,
+	"instanceVariables": [],
+	"behaviorTypes": [],
+	"effectTypes": [],
+	"animations": {
+		"items": [
+			{
+				"frames": [
+					{
+						"width": 51,
+						"height": 57,
+						"originX": 0.490196,
+						"originY": 1,
+						"originalSource": "",
+						"exportFormat": "png",
+						"exportQuality": 0.8,
+						"imageSpriteId": 15,
+						"duration": 1
+					},
+					{
+						"width": 51,
+						"height": 58,
+						"originX": 0.490196,
+						"originY": 1,
+						"originalSource": "",
+						"exportFormat": "png",
+						"exportQuality": 0.8,
+						"imageSpriteId": 16,
+						"duration": 1
+					}
+				],
+				"sid": 9995608873126104,
+				"name": "Default",
+				"isLooping": true,
+				"isPingPong": false,
+				"repeatCount": 1,
+				"repeatTo": 0,
+				"speed": 5
+			}
+		],
+		"subfolders": []
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"name": "blocks",
+	"plugin-id": "Sprite",
+	"sid": 6556485843228128,
+	"instanceVariables": [],
+	"behaviorTypes": [
+		{
+			"behaviorId": "solid",
+			"name": "Solid",
+			"sid": 3707717006583642
+		}
+	],
+	"effectTypes": [],
+	"members": [
+		"blockBlue",
+		"blockGreen",
+		"blockRed",
+		"blockYellow"
+	]
+}
