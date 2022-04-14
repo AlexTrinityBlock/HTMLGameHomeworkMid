@@ -42,7 +42,7 @@
     //裝載敵人物件的陣列
     var enemyArray = Array()
     //敵機出現排程器
-    var enemyScheduler
+    var Scheduler
     //背景物件
     var background
     //自機飛行器物件
@@ -67,10 +67,12 @@
         this.targetY = 0
         this.hitBoxX = 30
         this.hitBoxY = 30
+        this.isExplode = false
+        this.explodeTimer = 0
 
         //自機射擊
         this.shoot = function () {
-            selfBulletArray.push(new SelfBullet(this.positionX+(this.hitBoxX/2)-1, this.positionY))
+            selfBulletArray.push(new SelfBullet(this.positionX + (this.hitBoxX / 2) - 1, this.positionY))
         }
 
         //鍵盤偵聽與自機移動
@@ -91,10 +93,15 @@
 
         //繪製自機
         this.draw = function () {
-            var imageObj = new Image();
-            imageObj.src = "./GameAsset/spaceshooter/PNG/playerShip3_blue.png";
-            ctx.drawImage(imageObj, this.positionX, this.positionY, 30, 30)
+            if (this.isExplode == false) {
+                var imageObj = new Image();
+                imageObj.src = "./GameAsset/spaceshooter/PNG/playerShip3_blue.png";
+                ctx.drawImage(imageObj, this.positionX, this.positionY, 30, 30)
+            } else {
+                this.Explode()
+            }
         }
+
         //繪製自機
         this.update = function () {
             this.draw()
@@ -110,9 +117,36 @@
         this.hitBoxY = 20
         this.ImageSrc = "./GameAsset/spaceshooter/PNG/Lasers/laserBlue01.png"
 
+        //檢查自身在敵人陣列中的位置
+        this.checkSelfIndexInSelfBullet = function () {
+            for (i = 0; i < selfBulletArray.length; i++) {
+                selfBullet = selfBulletArray[i]
+                if (selfBullet.ObjectID == this.ObjectID) return i
+            }
+        }
+
+        //刪去自身
+        this.deleteSelfBulletInArray = function () {
+            selfBulletArray.splice(this.checkSelfIndexInSelfBullet(), 1)
+        }
+
+        //若子彈飛出邊界，則刪除自身
+        this.bulletDelete = function () {
+            if (this.positionY < 0) {
+                this.deleteSelfBulletInArray()
+            }
+        }
+
         //自動移動
         this.autoMove = function () {
             this.positionY -= 1
+        }
+
+        //更新子彈
+        this.update = function () {
+            this.bulletDelete()
+            this.autoMove()
+            this.draw()
         }
 
     }
@@ -120,19 +154,55 @@
     //敵人1(隨機移動發射飛彈的敵人)
     function enemy1Aircraft() {
         this.ImageSrc = "./GameAsset/spaceshooter/PNG/Enemies/enemyRed1.png";
-        this.enemyID = Date.now().toString(36) + Math.random().toString(36).substr(2);
+        this.ObjectID = Date.now().toString(36) + Math.random().toString(36).substr(2);
         this.positionX = Math.floor(Math.random() * 470)
         this.positionY = -10
         this.targetX = 0
         this.targetY = 0
         this.hitBoxX = 30
         this.hitBoxY = 30
+        this.speed = 1
+        this.isExplode = false
+        this.explodeTimer = 0
+        this.explodeSize = 5
+        this.isBullet = false
 
         //繪製敵機
         this.draw = function () {
+            if (this.isExplode == false) {
+                var imageObj = new Image();
+                imageObj.src = this.ImageSrc;
+                ctx.drawImage(imageObj, this.positionX, this.positionY, this.hitBoxX, this.hitBoxY)
+            } else {
+                this.Explode()
+            }
+        }
+
+        //爆炸
+        this.Explode = function () {
+            var explodeInterval = 20
+            var explodeImageSrc = ""
+
+            if (this.explodeTimer > explodeInterval * 6) {
+                this.deleteSelfInArray()
+            }
+            else if (this.explodeTimer > explodeInterval * 5) {
+                explodeImageSrc = "./GameAsset/wills_pixel_explosions_sample/round_explosion/PNG/frame0016.png"
+            }
+            else if (this.explodeTimer > explodeInterval * 4) {
+                explodeImageSrc = "./GameAsset/wills_pixel_explosions_sample/round_explosion/PNG/frame0012.png"
+            } else if (this.explodeTimer > explodeInterval * 3) {
+                explodeImageSrc = "./GameAsset/wills_pixel_explosions_sample/round_explosion/PNG/frame0008.png"
+            } else if (this.explodeTimer > explodeInterval * 2) {
+                explodeImageSrc = "./GameAsset/wills_pixel_explosions_sample/round_explosion/PNG/frame0004.png"
+            } else {
+                explodeImageSrc = "./GameAsset/wills_pixel_explosions_sample/round_explosion/PNG/frame0000.png"
+            }
+
             var imageObj = new Image();
-            imageObj.src = this.ImageSrc;
-            ctx.drawImage(imageObj, this.positionX, this.positionY, this.hitBoxX, this.hitBoxY)
+            imageObj.src = explodeImageSrc;
+            ctx.drawImage(imageObj, this.positionX - (this.hitBoxX * this.explodeSize / 2) + this.hitBoxX, this.positionY - (this.hitBoxY * this.explodeSize / 2) + this.hitBoxY, this.hitBoxX * 5, this.hitBoxY * 5)
+            this.explodeTimer += 1
         }
 
         //設置下一個移動點X
@@ -147,21 +217,43 @@
 
         //自動移動
         this.autoMove = function () {
+
+            //如果已經爆炸，停止移動
+            if (this.isExplode == true) {
+                return
+            }
+
             //X軸隨機移動
             if (this.positionX - this.targetX < 1 && this.positionX - this.targetX > -1) {
                 this.targetX = this.setNextMoveX()
             } else if (this.positionX - this.targetX > 0) {
-                this.positionX -= 1
+                if (this.positionX - this.targetX < this.speed) {
+                    this.positionX -= 1
+                } else {
+                    this.positionX -= this.speed
+                }
             } else if (this.positionX - this.targetX < 0) {
-                this.positionX += 1
+                if (this.positionX - this.targetX > this.speed) {
+                    this.positionX += 1
+                } else {
+                    this.positionX += this.speed
+                }
             }
             //Y軸隨機移動
             if (this.positionY - this.targetY < 1 && this.positionY - this.targetY > -1) {
                 this.targetY = this.setNextMoveY()
             } else if (this.positionY - this.targetY > 0) {
-                this.positionY -= 1
+                if (this.positionY - this.targetY < this.speed) {
+                    this.positionY -= 1
+                } else {
+                    this.positionY -= this.speed
+                }
             } else if (this.positionY - this.targetY < 0) {
-                this.positionY += 1
+                if (this.positionY - this.targetY > this.speed) {
+                    this.positionY += 1
+                } else {
+                    this.positionY += this.speed
+                }
             }
         }
 
@@ -183,7 +275,7 @@
         this.checkSelfIndexInEnemyArray = function () {
             for (i = 0; i < enemyArray.length; i++) {
                 enemy = enemyArray[i]
-                if (enemy.enemyID == this.enemyID) return i
+                if (enemy.ObjectID == this.ObjectID) return i
             }
         }
 
@@ -196,7 +288,31 @@
     //敵人2
     function enemy2Aircraft() {
         enemy1Aircraft.apply(this);//繼承所有敵機1的屬性。
+        this.speed = 2
         this.ImageSrc = "./GameAsset/spaceshooter/PNG/Enemies/enemyRed2.png";
+
+        //設置下一個移動點X
+        this.setNextMoveX = function () {
+            if (this.positionX >= 500 - this.hitBoxX) {
+                return 0
+            } else if (this.positionX <= 0) {
+                return 500 - this.hitBoxX
+            } else {
+                return 500 - this.hitBoxX
+            }
+        }
+
+        //設置下一個移動點Y
+        this.setNextMoveY = function () {
+            return this.targetY
+        }
+
+        //隨機射出子彈
+        this.shoot = function () {
+            if (Math.floor(Math.random() * 300) == 1) {
+                enemyArray.push(new EnemyBullet2(this.positionX + (this.hitBoxX / 2), this.positionY + this.hitBoxY))
+            }
+        }
     }
 
     //敵人3
@@ -231,31 +347,52 @@
         enemy1Aircraft.apply(this);//繼承所有敵機1的屬性。
         this.positionX = x
         this.positionY = y
+        this.speed = 1
+        this.isBullet = true
         this.hitBoxX = 5
         this.hitBoxY = 20
         this.ImageSrc = "./GameAsset/spaceshooter/PNG/Lasers/laserRed15.png"
 
         //自動移動
         this.autoMove = function () {
-            this.positionY += 1
+            this.positionY += this.speed
+        }
+
+        //若子彈飛出邊界，則刪除自身
+        this.bulletDelete = function () {
+            if (this.positionY > 500) {
+                this.deleteSelfInArray()
+            }
         }
 
         //更新子彈
         this.update = function () {
+            this.bulletDelete()
             this.autoMove()
             this.draw()
         }
     }
 
+    //敵人子彈2
+    function EnemyBullet2(x, y) {
+        EnemyBullet1.apply(this)
+        this.positionX = x
+        this.positionY = y
+        this.hitBoxX = 30
+        this.hitBoxY = 30
+        this.speed = 3
+        this.ImageSrc = "./GameAsset/spaceshooter/PNG/Lasers/laserRed08.png"
+    }
+
     //敵機出現排程
-    function EnemyScheduler() {
+    function Scheduler() {
         this.startTime = new Date();
         this.gameTime = 0
         //敵人排程
         this.schedule = [
-            { "Second": 1, "Enemy": 1, "Number": 5 },//第一秒，一號敵人，兩個
-            { "Second": 3, "Enemy": 2, "Number": 5 },
-            { "Second": 3, "Enemy": 3, "Number": 2 },
+            { "Second": 1, "Enemy": 1, "Number": 3 },//第一秒，一號敵人，兩個
+            { "Second": 3, "Enemy": 2, "Number": 3 },
+            { "Second": 3, "Enemy": 3, "Number": 1 },
         ]
 
         //投放敵人
@@ -304,7 +441,7 @@
         //繪製自機
         selfAircraft.update()
         //更新敵人排程器
-        enemyScheduler.update()
+        Scheduler.update()
         //更新所有敵機
         updateObjectArray(enemyArray)
         //更新所有自機子彈
@@ -319,7 +456,37 @@
         selfAircraft = new SelfAircraft()
         selfAircraft.listenKeyForMove()
         //設置敵人排程器
-        enemyScheduler = new EnemyScheduler()
+        Scheduler = new Scheduler()
+    }
+
+    //檢查敵人是否被命中
+    function EnemyHitChecker() {
+        for (i = 0; i < selfBulletArray.length; i++) {
+            //逐個敵人檢查是否被命中
+            for (j = 0; j < enemyArray.length; j++) {
+                bullet = selfBulletArray[i]
+                enemy = enemyArray[j]
+
+                //如果是子彈就排除
+                if (enemy.isBullet) {
+                    continue
+                }
+                //檢查敵人的命中框是否與自機子彈重疊
+                var enemyLeft = enemy.positionX
+                var enemyRight = enemy.positionX + enemy.hitBoxX
+                var enemyTop = enemy.positionY
+                var enemyDown = enemy.positionY + enemy.hitBoxY
+                var bulletLeft = bullet.positionX
+                var bulletRight = bullet.positionY + bullet.hitBoxX
+                var bulletTop = bullet.positionY
+                var bulletDown = bullet.positionY + bullet.hitBoxY
+
+                if (enemyLeft < bulletLeft && enemyRight > bulletRight && enemyTop < bulletTop && enemyDown > bulletDown) {
+                    enemy.isExplode = true
+                    bullet.deleteSelfBulletInArray()
+                }
+            }
+        }
     }
 
     //主函數
@@ -331,4 +498,6 @@
     init()
     //啟動主函數
     setInterval(mainLoop, 10)
+    //啟動敵人碰撞偵測
+    setInterval(EnemyHitChecker, 10)
 </script>
