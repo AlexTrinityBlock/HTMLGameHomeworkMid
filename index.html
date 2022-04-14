@@ -481,7 +481,7 @@
                 var bulletTop = bullet.positionY
                 var bulletDown = bullet.positionY + bullet.hitBoxY
 
-                if (enemyLeft < bulletLeft && enemyRight > bulletRight && enemyTop < bulletTop && enemyDown > bulletDown) {
+                if (enemyLeft < bulletLeft && enemyRight > bulletRight && enemyTop < bulletTop && enemyDown > bulletDown && enemy.isExplode == false) {
                     enemy.isExplode = true
                     bullet.deleteSelfBulletInArray()
                 }
