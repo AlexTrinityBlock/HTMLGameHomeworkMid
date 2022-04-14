@@ -70,7 +70,7 @@
 
         //自機射擊
         this.shoot = function () {
-            selfBulletArray.push(new SelfBullet(this.positionX, this.positionY))
+            selfBulletArray.push(new SelfBullet(this.positionX+(this.hitBoxX/2)-1, this.positionY))
         }
 
         //鍵盤偵聽與自機移動
