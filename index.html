@@ -47,6 +47,8 @@
     var background
     //自機飛行器物件
     var selfAircraft
+    //自機子彈陣列
+    var selfBulletArray = Array()
 
     //背景
     function BackgroundObj() {
@@ -66,6 +68,11 @@
         this.hitBoxX = 30
         this.hitBoxY = 30
 
+        //自機射擊
+        this.shoot = function () {
+            selfBulletArray.push(new SelfBullet(this.positionX, this.positionY))
+        }
+
         //鍵盤偵聽與自機移動
         this.listenKeyForMove = function () {
             document.onkeydown = function (e) {
@@ -76,6 +83,8 @@
                 else if (e.keyCode == 39) {
                     if (selfAircraft.positionX > 460) return
                     selfAircraft.positionX += 5
+                } else if (e.keyCode == 32) {
+                    selfAircraft.shoot()
                 }
             }
         }
@@ -90,6 +99,22 @@
         this.update = function () {
             this.draw()
         }
+    }
+
+    //自機子彈
+    function SelfBullet(x, y) {
+        EnemyBullet1.apply(this)
+        this.positionX = x
+        this.positionY = y
+        this.hitBoxX = 5
+        this.hitBoxY = 20
+        this.ImageSrc = "./GameAsset/spaceshooter/PNG/Lasers/laserBlue01.png"
+
+        //自動移動
+        this.autoMove = function () {
+            this.positionY -= 1
+        }
+
     }
 
     //敵人1(隨機移動發射飛彈的敵人)
@@ -112,7 +137,7 @@
 
         //設置下一個移動點X
         this.setNextMoveX = function () {
-            return Math.floor(Math.random() * 500)
+            return Math.floor(Math.random() * 500 - this.hitBoxX)
         }
 
         //設置下一個移動點Y
@@ -185,12 +210,12 @@
 
         //設置下一個移動點X
         this.setNextMoveX = function () {
-            if (this.positionX >= 500-this.hitBoxX) {
+            if (this.positionX >= 500 - this.hitBoxX) {
                 return 0
             } else if (this.positionX <= 0) {
-                return 500-this.hitBoxX
-            }else{
-                return 500-this.hitBoxX
+                return 500 - this.hitBoxX
+            } else {
+                return 500 - this.hitBoxX
             }
         }
 
@@ -203,17 +228,12 @@
 
     //敵機子彈1，直線前進的雷射
     function EnemyBullet1(x, y) {
+        enemy1Aircraft.apply(this);//繼承所有敵機1的屬性。
         this.positionX = x
         this.positionY = y
         this.hitBoxX = 5
         this.hitBoxY = 20
-
-        //繪製子彈
-        this.draw = function () {
-            var imageObj = new Image();
-            imageObj.src = "./GameAsset/spaceshooter/PNG/Lasers/laserRed15.png";
-            ctx.drawImage(imageObj, this.positionX, this.positionY, this.hitBoxX, this.hitBoxY)
-        }
+        this.ImageSrc = "./GameAsset/spaceshooter/PNG/Lasers/laserRed15.png"
 
         //自動移動
         this.autoMove = function () {
@@ -270,6 +290,13 @@
 
     }
 
+    //更新陣列物件
+    function updateObjectArray(obj) {
+        for (i = 0; i < obj.length; i++) {
+            obj[i].update()
+        }
+    }
+
     //更新所有物件
     function updateAll() {
         //繪製背景
@@ -279,9 +306,9 @@
         //更新敵人排程器
         enemyScheduler.update()
         //更新所有敵機
-        for (i = 0; i < enemyArray.length; i++) {
-            enemyArray[i].update()
-        }
+        updateObjectArray(enemyArray)
+        //更新所有自機子彈
+        updateObjectArray(selfBulletArray)
     }
 
     //初始化所有物件
