@@ -61,8 +61,8 @@
     function SelfAircraft() {
         this.positionX = 250
         this.positionY = 450
-        this.vectorX = 0
-        this.vectorY = 0
+        this.targetX = 0
+        this.targetY = 0
         this.hitBoxX = 30
         this.hitBoxY = 30
 
@@ -98,8 +98,8 @@
         this.enemyID = Date.now().toString(36) + Math.random().toString(36).substr(2);
         this.positionX = Math.floor(Math.random() * 470)
         this.positionY = -10
-        this.vectorX = 0
-        this.vectorY = 0
+        this.targetX = 0
+        this.targetY = 0
         this.hitBoxX = 30
         this.hitBoxY = 30
 
@@ -110,34 +110,40 @@
             ctx.drawImage(imageObj, this.positionX, this.positionY, this.hitBoxX, this.hitBoxY)
         }
 
+        //設置下一個移動點X
+        this.setNextMoveX = function () {
+            return Math.floor(Math.random() * 500)
+        }
+
+        //設置下一個移動點Y
+        this.setNextMoveY = function () {
+            return Math.floor(Math.random() * 300)
+        }
+
         //自動移動
         this.autoMove = function () {
             //X軸隨機移動
-            if (this.positionX - this.vectorX < 2 && this.positionX - this.vectorX > -2) {
-                this.vectorX = Math.floor(Math.random() * 600) - 50
-            } else if (this.positionX - this.vectorX > 0) {
+            if (this.positionX - this.targetX < 1 && this.positionX - this.targetX > -1) {
+                this.targetX = this.setNextMoveX()
+            } else if (this.positionX - this.targetX > 0) {
                 this.positionX -= 1
-                this.vectorX += 1
-            } else if (this.positionX - this.vectorX < 0) {
+            } else if (this.positionX - this.targetX < 0) {
                 this.positionX += 1
-                this.vectorX -= 1
             }
             //Y軸隨機移動
-            if (this.positionY - this.vectorY < 2 && this.positionY - this.vectorY > -2) {
-                this.vectorY = Math.floor(Math.random() * 300)
-            } else if (this.positionY - this.vectorY > 0) {
+            if (this.positionY - this.targetY < 1 && this.positionY - this.targetY > -1) {
+                this.targetY = this.setNextMoveY()
+            } else if (this.positionY - this.targetY > 0) {
                 this.positionY -= 1
-                this.vectorY += 1
-            } else if (this.positionY - this.vectorY < 0) {
+            } else if (this.positionY - this.targetY < 0) {
                 this.positionY += 1
-                this.vectorY -= 1
             }
         }
 
         //隨機射出子彈
         this.shoot = function () {
             if (Math.floor(Math.random() * 300) == 1) {
-                enemyArray.push(new EnemyBullet1(this.positionX+(this.hitBoxX/2), this.positionY+this.hitBoxY))
+                enemyArray.push(new EnemyBullet1(this.positionX + (this.hitBoxX / 2), this.positionY + this.hitBoxY))
             }
         }
 
@@ -174,33 +180,25 @@
         this.ImageSrc = "./GameAsset/kenney_spaceshooterextension/PNG/Sprites X2/Station/spaceStation_017.png";
         this.hitBoxX = 100
         this.hitBoxY = 100
-        this.vectorX = 0
-        this.vectorY = 20
+        this.targetX = 0
+        this.targetY = 20
 
-        //自動移動
-        this.autoMove = function () {
-            //X軸隨機移動
-            if (this.positionX - this.vectorX < 2 && this.positionX - this.vectorX > -2) {
-                this.vectorX = Math.floor(Math.random() * 600) - 50
-            } else if (this.positionX - this.vectorX > 0) {
-                this.positionX -= 1
-                this.vectorX += 1
-            } else if (this.positionX - this.vectorX < 0) {
-                this.positionX += 1
-                this.vectorX -= 1
+        //設置下一個移動點X
+        this.setNextMoveX = function () {
+            if (this.positionX >= 500-this.hitBoxX) {
+                return 0
+            } else if (this.positionX <= 0) {
+                return 500-this.hitBoxX
+            }else{
+                return 500-this.hitBoxX
             }
-            //Y軸隨機移動
-            if (this.positionY - this.vectorY < 2 && this.positionY - this.vectorY > -2) {
-                // this.vectorY = Math.floor(Math.random() * 300)
-            } else if (this.positionY - this.vectorY > 0) {
-                this.positionY -= 1
-                this.vectorY += 1
-            } else if (this.positionY - this.vectorY < 0) {
-                this.positionY += 1
-                this.vectorY -= 1
-            }
-
         }
+
+        //設置下一個移動點Y
+        this.setNextMoveY = function () {
+            return this.targetY
+        }
+
     }
 
     //敵機子彈1，直線前進的雷射
@@ -237,7 +235,7 @@
         this.schedule = [
             { "Second": 1, "Enemy": 1, "Number": 5 },//第一秒，一號敵人，兩個
             { "Second": 3, "Enemy": 2, "Number": 5 },
-            { "Second": 3, "Enemy": 3, "Number": 5 },
+            { "Second": 3, "Enemy": 3, "Number": 2 },
         ]
 
         //投放敵人
