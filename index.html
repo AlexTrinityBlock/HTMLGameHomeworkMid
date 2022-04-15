@@ -49,6 +49,10 @@
     var selfAircraft
     //自機子彈陣列
     var selfBulletArray = Array()
+    //遊戲結束
+    var gameOver = false
+    //主迴圈ID(用於在遊戲結束時，中止主迴圈，進行頁面重整。)
+    var mainLoopID
 
     //背景
     function BackgroundObj() {
@@ -74,7 +78,7 @@
 
         //自機射擊
         this.shoot = function () {
-            if(this.isExplode)return//已經爆炸，不會發出子彈
+            if (this.isExplode) return//已經爆炸，不會發出子彈
             if (this.coolDownTimer != 0) return//子彈冷卻未結束，則不會發出子彈
             this.coolDownTimer = 100
             selfBulletArray.push(new SelfBullet(this.positionX + (this.hitBoxX / 2) - 1, this.positionY))
@@ -91,7 +95,9 @@
 
         //鍵盤偵聽與自機移動
         this.listenKeyForMove = function () {
+            //偵測鍵盤
             document.onkeydown = function (e) {
+                if (this.isExplode) return//已經爆炸，不會移動
                 if (e.keyCode == 37) {
                     if (selfAircraft.positionX < 10) return
                     selfAircraft.positionX -= 10
@@ -112,7 +118,7 @@
             var explodeImageSrc = ""
 
             if (this.explodeTimer > explodeInterval * 6) {
-                
+                gameOver = true//遊戲結束
             }
             else if (this.explodeTimer > explodeInterval * 5) {
                 explodeImageSrc = "./GameAsset/wills_pixel_explosions_sample/round_explosion/PNG/frame0016.png"
@@ -495,6 +501,8 @@
 
     //初始化所有物件
     function init() {
+        //開始介紹
+        alert("用電腦鍵盤左右來移動，空白鍵發射")
         //啟動背景
         background = new BackgroundObj()
         //啟動飛行器與鍵盤偵聽
@@ -531,7 +539,7 @@
 
                 if (bulletTop < enemyDown && bulletRight > enemyLeft && bulletLeft < enemyLeft && enemy.isExplode == false) isHited = true
                 if (bulletTop < enemyDown && bulletRight > enemyRight && bulletLeft < enemyRight && enemy.isExplode == false) isHited = true
-                if (bulletTop < enemyDown && bulletRight < enemyRight && bulletLeft > enemyLeft && enemy  .isExplode == false) isHited = true
+                if (bulletTop < enemyDown && bulletRight < enemyRight && bulletLeft > enemyLeft && enemy.isExplode == false) isHited = true
 
 
                 if (isHited) {
@@ -576,15 +584,25 @@
         }
     }
 
+    //檢查遊戲是否結束
+    function checkGameOver() {
+        if (gameOver) {
+            alert("遊戲結束")
+            location.reload()
+            clearInterval(mainLoopID)
+        }
+    }
+
     //主函數
     function mainLoop() {
+        checkGameOver()
         updateAll()
     }
 
     //初始化各個物件
     init()
     //啟動主函數
-    setInterval(mainLoop, 10)
+    mainLoopID = setInterval(mainLoop, 10)
     //啟動敵人碰撞偵測
     setInterval(EnemyHitChecker, 10)
     setInterval(SelfHitChecker, 10)
