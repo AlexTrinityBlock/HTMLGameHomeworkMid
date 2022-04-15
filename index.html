@@ -483,6 +483,7 @@
 
                 if (enemyLeft < bulletLeft && enemyRight > bulletRight && enemyTop < bulletTop && enemyDown > bulletDown && enemy.isExplode == false) {
                     enemy.isExplode = true
+                    enemy.Explode()
                     bullet.deleteSelfBulletInArray()
                 }
             }
