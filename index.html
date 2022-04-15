@@ -74,6 +74,7 @@
 
         //自機射擊
         this.shoot = function () {
+            if(this.isExplode)return//已經爆炸，不會發出子彈
             if (this.coolDownTimer != 0) return//子彈冷卻未結束，則不會發出子彈
             this.coolDownTimer = 100
             selfBulletArray.push(new SelfBullet(this.positionX + (this.hitBoxX / 2) - 1, this.positionY))
@@ -111,7 +112,7 @@
             var explodeImageSrc = ""
 
             if (this.explodeTimer > explodeInterval * 6) {
-
+                
             }
             else if (this.explodeTimer > explodeInterval * 5) {
                 explodeImageSrc = "./GameAsset/wills_pixel_explosions_sample/round_explosion/PNG/frame0016.png"
