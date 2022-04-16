@@ -53,10 +53,18 @@
     var gameStart = false
     //遊戲結束
     var gameOver = false
+    //遊戲獲勝
+    var gameWin = false
     //遊戲結束重新整理
     var gameOverRefresh = false
     //主迴圈ID(用於在遊戲結束時，中止主迴圈，進行頁面重整。)
     var mainLoopID
+    //當前的遊玩關卡
+    var currentGameLevel = 1
+    //當前的遊玩關卡是否確認
+    var currentGameLevelReady = false
+    //為了除錯緊急停止
+    var DebugPause = false
 
     //背景
     function BackgroundObj() {
@@ -111,8 +119,19 @@
                     selfAircraft.positionX += 10
                 } else if (e.keyCode == 32) {
                     selfAircraft.shoot()
-                    if (!gameStart) gameStart = true
-                    if (gameOver) gameOverRefresh = true
+
+                    if (!gameStart) {
+                        gameStart = true
+                        return
+                    }
+                    if (gameOver) {
+                        gameOverRefresh = true
+                        return
+                    }
+                    if (!currentGameLevelReady) {
+                        currentGameLevelReady = true
+                        return
+                    }
                 }
             }
         }
@@ -445,11 +464,21 @@
         this.gameTime = 0
         //敵人排程
         this.schedule = [
-            { "Second": 1, "Enemy": 1, "Number": 3 },//第一秒，一號敵人，兩個
-            { "Second": 3, "Enemy": 2, "Number": 3 },
-            { "Second": 3, "Enemy": 3, "Number": 1 },
-            { "Second": 10, "Enemy": 1, "Number": 10 },
-            { "Second": 30, "Enemy": 2, "Number": 10 },
+            //關卡一    
+            [
+                { "Second": 1, "Enemy": 1, "Number": 5 },//第一秒，一號敵人，兩個
+                { "Second": 3, "Enemy": 1, "Number": 5 },
+                { "Second": 6, "Enemy": 1, "Number": 5 },
+                // { "Second": 3, "Enemy": 2, "Number": 3 },
+                // { "Second": 3, "Enemy": 3, "Number": 1 },
+                // { "Second": 10, "Enemy": 1, "Number": 10 },
+                // { "Second": 30, "Enemy": 2, "Number": 10 },
+            ],
+            //關卡二
+            [
+                { "Second": 3, "Enemy": 2, "Number": 10 },
+                { "Second": 3, "Enemy": 3, "Number": 2 },
+            ],
         ]
 
         //投放敵人
@@ -465,13 +494,36 @@
 
         //如果時間到將敵人放入
         this.action = function () {
-            for (i = 0; i < this.schedule.length; i++) {
-                var oneAction = this.schedule[0]
+
+            //玩家如果還沒按下關卡準備
+            if (!currentGameLevelReady) return
+
+            //如果所有關卡跑完，但敵人尚未都被打敗
+            if (this.schedule.length == 0 && enemyArray.length == 0) {
+                gameWin = true
+                return
+            }
+
+            //如果所有關卡跑完，但敵人尚未都被打敗
+            if (this.schedule.length == 0) return
+
+            var gameLevel = this.schedule[0]
+            for (j = 0; j < gameLevel.length; j++) {
+                var oneAction = gameLevel[j]
                 if (oneAction.Second <= this.gameTime) {
-                    for (i = 0; i < oneAction.Number; i++) {
+                    for (k = 0; k < oneAction.Number; k++) {
                         this.createEnemy(oneAction.Enemy)
                     }
-                    this.schedule.shift()
+                    this.schedule[0].shift()
+                }
+            }
+            //若當前的關卡跑完
+            if (this.schedule[0].length == 0 && enemyArray.length == 0) {
+                this.schedule.shift()//移除當前的關卡
+                if (this.schedule.length != 0) {
+                    currentGameLevel += 1//關卡數量+1
+                    currentGameLevelReady = false//關卡準備狀態為否
+                    this.gameTime = 0//重置關卡計時
                 }
             }
         }
@@ -607,12 +659,48 @@
         }
     }
 
+    //關卡開始畫面
+    function levelStartMenu() {
+        menuImage = [
+            "./GameAsset/GameLevels/GameLevel1.png",
+            "./GameAsset/GameLevels/GameLevel2.png",
+        ]
+        var imageObj = new Image();
+
+        //檢查圖片數量是否正確
+        if (menuImage.length < currentGameLevel) {
+            throw "關卡圖片載入失敗，請檢查關卡數量與圖片數量是否一致"
+            DebugPause = true
+            return
+        }
+
+        imageObj.src = menuImage[currentGameLevel - 1];
+        ctx.drawImage(imageObj, 0, 0, 500, 500)
+    }
+
+    //遊戲獲勝畫面
+    function gameWinMenu() {
+        var imageObj = new Image();
+        imageObj.src = "./GameAsset/GameWin/GameWin.png";
+        ctx.drawImage(imageObj, 0, 0, 500, 500)
+    }
+
     //主函數
     function mainLoop() {
+
+        if (DebugPause) {//如果除錯而緊急停止，就不會執行以下程式，並中止迴圈
+            clearInterval(mainLoopID)
+            return
+        }
+
         if (!gameStart) {//若遊戲還沒開始則跳出開始畫面
             gameStartMenu()
         } else if (gameOver) {//若遊戲結束，則顯示遊戲結束
             gameOverMenu()
+        } else if (!currentGameLevelReady) {
+            levelStartMenu()
+        } else if (gameWin) {
+            gameWinMenu()
         } else {
             updateAll()
         }
