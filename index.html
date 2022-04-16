@@ -49,8 +49,12 @@
     var selfAircraft
     //自機子彈陣列
     var selfBulletArray = Array()
+    //遊戲開始
+    var gameStart = false
     //遊戲結束
     var gameOver = false
+    //遊戲結束重新整理
+    var gameOverRefresh = false
     //主迴圈ID(用於在遊戲結束時，中止主迴圈，進行頁面重整。)
     var mainLoopID
 
@@ -107,6 +111,8 @@
                     selfAircraft.positionX += 10
                 } else if (e.keyCode == 32) {
                     selfAircraft.shoot()
+                    if (!gameStart) gameStart = true
+                    if (gameOver) gameOverRefresh = true
                 }
             }
         }
@@ -501,8 +507,6 @@
 
     //初始化所有物件
     function init() {
-        //開始介紹
-        alert("用電腦鍵盤左右來移動，空白鍵發射")
         //啟動背景
         background = new BackgroundObj()
         //啟動飛行器與鍵盤偵聽
@@ -584,10 +588,20 @@
         }
     }
 
-    //檢查遊戲是否結束
-    function checkGameOver() {
-        if (gameOver) {
-            alert("遊戲結束")
+    //遊戲開始畫面
+    function gameStartMenu() {
+        var imageObj = new Image();
+        imageObj.src = "./GameAsset/GameStart/GameStart.png";
+        ctx.drawImage(imageObj, 0, 0, 500, 500)
+    }
+
+    //遊戲結束畫面
+    function gameOverMenu() {
+        var imageObj = new Image();
+        imageObj.src = "./GameAsset/GameOver/GameOver.png";
+        ctx.drawImage(imageObj, 0, 0, 500, 500)
+
+        if (gameOverRefresh) {
             location.reload()
             clearInterval(mainLoopID)
         }
@@ -595,15 +609,24 @@
 
     //主函數
     function mainLoop() {
-        checkGameOver()
-        updateAll()
+        if (!gameStart) {//若遊戲還沒開始則跳出開始畫面
+            gameStartMenu()
+        } else if (gameOver) {//若遊戲結束，則顯示遊戲結束
+            gameOverMenu()
+        } else {
+            updateAll()
+        }
     }
 
-    //初始化各個物件
-    init()
-    //啟動主函數
-    mainLoopID = setInterval(mainLoop, 10)
-    //啟動敵人碰撞偵測
-    setInterval(EnemyHitChecker, 10)
-    setInterval(SelfHitChecker, 10)
+
+    window.onload = function () {
+        //初始化各個物件
+        init()
+        //啟動主函數
+        mainLoopID = setInterval(mainLoop, 10)
+        //啟動敵人碰撞偵測
+        setInterval(EnemyHitChecker, 10)
+        setInterval(SelfHitChecker, 10)
+    }
+
 </script>
